@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.28;
+pragma solidity ^0.8.29;
 
 import "@openzeppelin/contracts-upgradeable/token/ERC721/ERC721Upgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
@@ -18,6 +18,12 @@ contract MaXXHash is
     uint256 public maxSupply;
     string private baseURI;
     uint256 public price;
+    uint256 public maxMintAmount;
+
+    /// @custom:oz-upgrades-unsafe-allow constructor
+    constructor() {
+        _disableInitializers();
+    }
 
     function initialize(
         uint256 maxSupply_,
@@ -33,6 +39,8 @@ contract MaXXHash is
     }
 
     function mint(address _to, uint256 amount) external payable {
+        require(msg.sender == tx.origin, "No contracts allowed");
+        require(amount <= maxMintAmount, "Exceeds max mint amount");
         require(totalSupply + amount <= maxSupply, "Max supply reached");
         require(msg.value >= price * amount, "Insufficient funds");
         require(_to != address(0), "Zero address not allowed");
@@ -61,6 +69,10 @@ contract MaXXHash is
 
     function setPrice(uint256 _price) public onlyOwner {
         price = _price;
+    }
+
+    function setMaxMintAmount(uint256 _maxMintAmount) external onlyOwner {
+        maxMintAmount = _maxMintAmount;
     }
 
     function setMaxSupply(uint256 _maxSupply) external onlyOwner {

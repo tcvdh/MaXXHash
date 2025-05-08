@@ -52,7 +52,7 @@ The script will output the deployed contract address. Save this address for veri
 After deployment, verify the contract on the blockchain explorer:
 
 ```bash
-npx hardhat verify --network <network-name> <deployed-contract-address>
+npx hardhat verify --network <network-name> <deployed-proxy-address> --force
 ```
 
 Alternatively, you can use the built-in verification in the deployment script by setting the ENV variable

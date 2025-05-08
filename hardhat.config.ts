@@ -8,7 +8,7 @@ const API_KEY = process.env.API_KEY || "";
 
 const config: HardhatUserConfig = {
   solidity: {
-    version: "0.8.28",
+    version: "0.8.29",
     settings: {
       optimizer: {
         enabled: true,
@@ -26,11 +26,18 @@ const config: HardhatUserConfig = {
       url: `https://eth-sepolia.g.alchemy.com/v2/${API_KEY}`,
       accounts: PRIVATE_KEY ? [PRIVATE_KEY] : [],
     },
+    base: {
+      url: `https://mainnet.base.org`,
+      accounts: PRIVATE_KEY ? [PRIVATE_KEY] : [],
+    },
     // For mainnet deployment
     mainnet: {
       url: `https://eth-mainnet.g.alchemy.com/v2/${API_KEY}`,
       accounts: PRIVATE_KEY ? [PRIVATE_KEY] : [],
     }
+  },
+  sourcify: {
+    enabled: false
   },
   etherscan: {
     apiKey: process.env.ETHERSCAN_API_KEY || "",
