@@ -5,14 +5,14 @@ import "@openzeppelin/contracts-upgradeable/token/ERC721/ERC721Upgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 
-contract MaXXHash is
-    Initializable,
-    ERC721Upgradeable,
-    OwnableUpgradeable
-{
+contract MaXXHash is Initializable, ERC721Upgradeable, OwnableUpgradeable {
     using Strings for uint256;
 
-    event TokensMinted(address indexed to, uint256 indexed amount, uint256 currentTotalSupply);
+    event TokensMinted(
+        address indexed to,
+        uint256 indexed amount,
+        uint256 currentTotalSupply
+    );
 
     uint256 public totalSupply;
     uint256 public maxSupply;
@@ -57,7 +57,9 @@ contract MaXXHash is
         return baseURI;
     }
 
-    function tokenURI(uint256 tokenId) public view virtual override returns (string memory) {
+    function tokenURI(
+        uint256 tokenId
+    ) public view virtual override returns (string memory) {
         _requireOwned(tokenId);
 
         string memory URI = _baseURI();
@@ -94,4 +96,3 @@ contract MaXXHash is
         require(success, "Withdrawal failed");
     }
 }
-
