@@ -3,8 +3,8 @@ import { run } from "hardhat";
 
 async function main() {
     const Maxxhash = await ethers.getContractFactory("MaXXHash");
-    const maxSupply = process.env.MAX_SUPPLY || 777;
-    const baseURI = process.env.BASE_URI || "ipfs://";
+    const maxSupply = process.env.MAX_SUPPLY || 100;
+    const baseURI = process.env.BASE_URI || "https://ipfs.io/ipfs/bafybeiea2744bntdt4zosavp2wddlylogmwpngg3jz4olg77pq5w7uhqna/";
     const maxxhash = await upgrades.deployProxy(Maxxhash, [maxSupply, baseURI], {
         initializer: "initialize",
     });
