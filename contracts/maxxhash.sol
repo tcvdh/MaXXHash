@@ -10,15 +10,13 @@ contract MaXXHash is
     ERC721Upgradeable,
     OwnableUpgradeable
 {
-    event TokensMinted(
-        address indexed to,
-        uint256 indexed amount,
-        uint256 currentTotalSupply
-    );
+    using Strings for uint256;
+
+    event TokensMinted(address indexed to, uint256 indexed amount, uint256 currentTotalSupply);
 
     uint256 public totalSupply;
     uint256 public maxSupply;
-    string private URI;
+    string private baseURI;
     uint256 public price;
 
     function initialize(
@@ -29,7 +27,7 @@ contract MaXXHash is
         __Ownable_init(msg.sender);
 
         maxSupply = maxSupply_;
-        URI = uri_;
+        baseURI = uri_;
         price = 0.01 ether;
         totalSupply = 0;
     }
@@ -47,9 +45,18 @@ contract MaXXHash is
         emit TokensMinted(_to, amount, totalSupply);
     }
 
+    function _baseURI() internal view virtual override returns (string memory) {
+        return baseURI;
+    }
+
     function tokenURI(uint256 tokenId) public view virtual override returns (string memory) {
         _requireOwned(tokenId);
-        return URI;
+
+        string memory URI = _baseURI();
+        if (bytes(URI).length == 0) {
+            return "";
+        }
+        return string(abi.encodePacked(URI, tokenId.toString(), ".json"));
     }
 
     function setPrice(uint256 _price) public onlyOwner {
@@ -64,8 +71,8 @@ contract MaXXHash is
         maxSupply = _maxSupply;
     }
 
-    function setURI(string memory _URI) external onlyOwner {
-        URI = _URI;
+    function setBaseURI(string memory _URI) external onlyOwner {
+        baseURI = _URI;
     }
 
     function withdraw() external onlyOwner {
