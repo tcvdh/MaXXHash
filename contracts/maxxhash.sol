@@ -40,7 +40,7 @@ contract MaXXHash is Initializable, ERC721Upgradeable, OwnableUpgradeable {
 
     function mint(address _to, uint256 amount) external payable {
         require(msg.sender == tx.origin, "No contracts allowed");
-        require(amount <= maxMintAmount, "Exceeds max mint amount");
+        require(balanceOf(msg.sender) + amount <= maxMintAmount, "Exceeds max mint amount");
         require(totalSupply + amount <= maxSupply, "Max supply reached");
         require(msg.value >= price * amount, "Insufficient funds");
         require(_to != address(0), "Zero address not allowed");
