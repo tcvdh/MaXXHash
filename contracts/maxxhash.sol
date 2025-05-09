@@ -19,6 +19,7 @@ contract MaXXHash is Initializable, ERC721Upgradeable, OwnableUpgradeable {
     string private baseURI;
     uint256 public price;
     uint256 public maxMintAmount;
+    mapping(address => uint256) public mintedAmount;
 
     /// @custom:oz-upgrades-unsafe-allow constructor
     constructor() {
@@ -40,16 +41,18 @@ contract MaXXHash is Initializable, ERC721Upgradeable, OwnableUpgradeable {
 
     function mint(address _to, uint256 amount) external payable {
         require(msg.sender == tx.origin, "No contracts allowed");
-        require(balanceOf(msg.sender) + amount <= maxMintAmount, "Exceeds max mint amount");
+        require(mintedAmount[msg.sender] + amount <= maxMintAmount, "Exceeds max mint amount");
         require(totalSupply + amount <= maxSupply, "Max supply reached");
         require(msg.value >= price * amount, "Insufficient funds");
         require(_to != address(0), "Zero address not allowed");
         require(amount > 0, "Amount cannot be zero");
+        require(msg.sender == _to, "Only sender can mint");
 
         for (uint256 i = 0; i < amount; ++i) {
             _safeMint(_to, totalSupply + 1);
             totalSupply++;
         }
+        mintedAmount[msg.sender] += amount;
         emit TokensMinted(_to, amount, totalSupply);
     }
 
